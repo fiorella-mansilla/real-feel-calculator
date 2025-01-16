@@ -1,4 +1,11 @@
-// src/data/cities.js
+
+/**
+ * An array of city objects, each containing the name, latitude, and longitude
+ * of various cities in Germany. This data will be handled by our backend and used as parameters 
+ * for retrieving weather data from the external API "Bright Sky".
+ * 
+ * @type {Array<{name: string, lat: number, lon: number}>}
+ */
 
 export const cities = [
   { name: "Berlin", lat: 52.5200, lon: 13.4050 },
