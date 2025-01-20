@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
-import { MenuItem, Select, InputLabel, FormControl, Paper } from "@mui/material";
+import { MenuItem, Select, InputLabel, FormControl, useMediaQuery } from "@mui/material";
 import { cities } from "../data/cities"; 
 
 /**
@@ -15,6 +15,8 @@ import { cities } from "../data/cities";
 
 const CitySelectorDropdown = ({ onCitySelect }) => {
   const [selectedCity, setSelectedCity] = useState(null); 
+
+  const isSmallScreen = useMediaQuery("(max-width:600px)");
 
   const handleCitySelect = useCallback((event) => {
     const cityName = event.target.value;
@@ -41,12 +43,12 @@ const CitySelectorDropdown = ({ onCitySelect }) => {
         label="Select a City"
         sx={{
           backgroundColor: "gray.50",
-          borderRadius: "8px", // Rounded corners for the Select input
+          borderRadius: "8px", 
         }}
         MenuProps={{
           PaperProps: {
             style: {
-              maxHeight: "600px", // Max height for dropdown
+              maxHeight: isSmallScreen ? "350px" : "550px", // Max height for dropdown
               overflowY: "auto",  // Scrollable if the list is too long
               borderRadius: "8px", // Rounded corners for the dropdown list
             },
