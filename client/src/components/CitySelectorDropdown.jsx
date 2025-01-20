@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
-import { MenuItem, Select, InputLabel, FormControl } from "@mui/material";
+import { MenuItem, Select, InputLabel, FormControl, useMediaQuery } from "@mui/material";
 import { cities } from "../data/cities"; 
 
 /**
@@ -16,13 +16,15 @@ import { cities } from "../data/cities";
 const CitySelectorDropdown = ({ onCitySelect }) => {
   const [selectedCity, setSelectedCity] = useState(null); 
 
+  const isSmallScreen = useMediaQuery("(max-width:600px)");
+
   const handleCitySelect = useCallback((event) => {
     const cityName = event.target.value;
     const city = cities.find((c) => c.name === cityName); 
 
     setSelectedCity(city || null);
-    if (city && onCitySelect) {
-      onCitySelect(city); 
+    if (onCitySelect) {
+      onCitySelect(city || null); 
     }
   }, [onCitySelect]);
 
@@ -39,9 +41,21 @@ const CitySelectorDropdown = ({ onCitySelect }) => {
         value={selectedCity?.name || ""}
         onChange={handleCitySelect}
         label="Select a City"
-        sx={{ backgroundColor: "gray.50" }} 
+        sx={{
+          backgroundColor: "gray.50",
+          borderRadius: "8px", 
+        }}
+        MenuProps={{
+          PaperProps: {
+            style: {
+              maxHeight: isSmallScreen ? "350px" : "550px", // Max height for dropdown
+              overflowY: "auto",  // Scrollable if the list is too long
+              borderRadius: "8px", // Rounded corners for the dropdown list
+            },
+          },
+        }}
       >
-        {/* Clear selection option */}
+        {/* None Option at the Top of the list */}
         <MenuItem value="">
           <em>None</em>
         </MenuItem>
@@ -49,7 +63,7 @@ const CitySelectorDropdown = ({ onCitySelect }) => {
         {/* Render sorted cities */}
         {sortedCities.map((city) => (
           <MenuItem key={city.name} value={city.name}>
-            {city.name} 
+            {city.name}
           </MenuItem>
         ))}
       </Select>

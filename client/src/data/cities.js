@@ -30,5 +30,5 @@ export const cities = [
   { name: "Rostock", lat: 54.0924, lon: 12.0991 },
   { name: "Erfurt", lat: 50.9848, lon: 11.0299 },
   { name: "Mainz", lat: 49.9929, lon: 8.2473 },
-  { name: "Lübeck", lat: 53.8655, lon: 10.6866 }
+  { name: "Lübeck", lat: 53.8655, lon: 10.6866 },
 ];
