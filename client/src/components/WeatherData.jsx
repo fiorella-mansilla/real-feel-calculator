@@ -66,7 +66,7 @@ const WeatherData = ({ weatherData }) => {
           <ListItemIcon>
             <WbSunnyIcon color="primary" />
           </ListItemIcon>
-          <ListItemText primary="Sunshine" secondary={`${sunshine}%`} />
+          <ListItemText primary="Sunshine" secondary={`${sunshine}s`} />
         </ListItem>
       </List>
     </div>
