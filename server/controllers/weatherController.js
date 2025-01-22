@@ -9,23 +9,20 @@ import { calculateRealFeel } from '../services/realFeelCalculatorService.js';
  * @param {Function} next - Express next middleware function.
  */
 export const getRealFeelTemperature = async (req, res, next) => {
-    const { lat, lon } = req.coordinates; // Extract validated coordinates from middleware
+    const { lat, lon } = req.coordinates;
 
     try {
-        // Fetch the weather data using the weatherService
+        // Get already-extracted weather data from the service
         const weatherData = await getWeatherData(lat, lon);
 
-        // Extract necessary parameters for real feel calculation
-        const { timestamp, temperature, relativeHumidity, windSpeed, sunshine, cloudCover } = weatherData;
-
-        // Calculate the real feel temperature using the realFeelCalculatorService
+        // Calculate the real feel temperature
         const realFeel = calculateRealFeel(
-            timestamp,
-            temperature,
-            relativeHumidity,
-            windSpeed,
-            sunshine,
-            cloudCover
+            weatherData.timestamp,
+            weatherData.temperature,
+            weatherData.relativeHumidity,
+            weatherData.windSpeed,
+            weatherData.sunshine,
+            weatherData.cloudCover
         );
 
         // Send the result back to the user
