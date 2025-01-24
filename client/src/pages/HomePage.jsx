@@ -4,6 +4,7 @@ import axios from "axios";
 import CitySelectorDropdown from "../components/CitySelectorDropdown";
 import WeatherData from "../components/WeatherData";
 import CircularProgress from "@mui/material/CircularProgress";
+import Logo from "../assets/home_logo.png";
 
 const fetchRealFeel = async ({ queryKey }) => {
   const [, cityName, lat, lon] = queryKey;
@@ -50,11 +51,18 @@ const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start bg-gray-100 p-fluid-1">
-      {/* Title */}
-      <h1 className="text-3xl lg:text-4xl font-medium text-center mb-8 lg:mt-2">
-        Real Feel Temperature Calculator
-      </h1>
+    <div className="flex flex-col items-center justify-start min-h-screen bg-gray-100 p-fluid-1">
+      {/* Main Title with Logo */}
+      <div className="flex flex-col sm:flex-row items-center justify-center sm:space-x-4 space-y-4 sm:space-y-0 mb-8 lg:mt-2">
+        <img
+          src={Logo}
+          alt="Logo"
+          className="h-9 w-9 sm:h-11 sm:w-11 lg:h-16 lg:w-16 object-contain"
+        />
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center sm:text-left">
+          Real Feel Temperature Calculator
+        </h1>
+      </div>
 
       {/* Main Content */}
       <div className="flex flex-col md:flex-row flex-1 w-full max-w-screen-xl bg-white rounded-lg shadow-md p-fluid-1 md:p-fluid-2">
