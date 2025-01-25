@@ -1,11 +1,16 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import PropTypes from "prop-types";
-import { MenuItem, Select, InputLabel, FormControl, useMediaQuery } from "@mui/material";
+import { 
+  MenuItem, 
+  Select, 
+  InputLabel, 
+  FormControl, 
+  useMediaQuery } from "@mui/material";
 import { cities } from "../data/cities"; 
 
 /**
- * CitySelectorDropdown component allows users to select a city from a dropdown menu.
- * It sorts the cities alphabetically and notifies the parent component when a city is selected.
+ * CitySelectorDropdown allows users to select a city from which they want to get the real feel temperature
+ * and weather information. It sorts the cities alphabetically and notifies the parent component when a city is selected.
  *
  * @component
  * @param {Object} props - Component props
@@ -16,46 +21,56 @@ import { cities } from "../data/cities";
 const CitySelectorDropdown = ({ onCitySelect }) => {
   const [selectedCity, setSelectedCity] = useState(null); 
 
+  // Detect screen size for responsive dropdown height
   const isSmallScreen = useMediaQuery("(max-width:600px)");
 
-  const handleCitySelect = useCallback((event) => {
-    const cityName = event.target.value;
-    const city = cities.find((c) => c.name === cityName); 
+  // Handle city selection 
+  const handleCitySelect = useCallback(
+    (event) => {
+      const cityName = event.target.value;
+      const city = cities.find((c) => c.name === cityName) || null; 
 
-    setSelectedCity(city || null);
-    if (onCitySelect) {
-      onCitySelect(city || null); 
-    }
-  }, [onCitySelect]);
+      setSelectedCity(city);
+      onCitySelect(city);
+  }, 
+  [onCitySelect]);
 
-  // Sort cities alphabetically by name
-  const sortedCities = [...cities].sort((a, b) =>
-    a.name.localeCompare(b.name)
+  // Memoized alphabetical sorting of cities to optimize performance
+  const sortedCities = useMemo(
+    () => [...cities].sort((a, b) => a.name.localeCompare(b.name)),
+    [cities]
   );
 
+  // Styles for dropdown and menu
+  const styles = {
+    formControl: { marginY: 2 },
+    select: {
+      backgroundColor: "gray.50",
+      borderRadius: "8px",
+    },
+    menuPaper: {
+      maxHeight: isSmallScreen ? "350px" : "550px",
+      overflowY: "auto",
+      borderRadius: "8px",
+    },
+  };
+
   return (
-    <FormControl fullWidth variant="outlined" sx={{ marginY: 2 }}>
+    <FormControl fullWidth variant="outlined" sx={styles.formControl}>
       <InputLabel id="city-select-label">Select a City</InputLabel>
       <Select
         labelId="city-select-label"
         value={selectedCity?.name || ""}
         onChange={handleCitySelect}
         label="Select a City"
-        sx={{
-          backgroundColor: "gray.50",
-          borderRadius: "8px", 
-        }}
+        sx={styles.select}
         MenuProps={{
           PaperProps: {
-            style: {
-              maxHeight: isSmallScreen ? "350px" : "550px", // Max height for dropdown
-              overflowY: "auto",  // Scrollable if the list is too long
-              borderRadius: "8px", // Rounded corners for the dropdown list
-            },
+            style: styles.menuPaper,
           },
         }}
       >
-        {/* None Option at the Top of the list */}
+        {/* Option to clear selection and previous rendered data */}
         <MenuItem value="">
           <em>None</em>
         </MenuItem>
