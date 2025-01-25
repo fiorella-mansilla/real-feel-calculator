@@ -1,4 +1,4 @@
-// src/App.jsx
+/* Application entry point */
 import React from "react";
 import HomePage from "./pages/HomePage";
 
