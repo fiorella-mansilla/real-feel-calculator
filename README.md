@@ -32,7 +32,7 @@ This project includes :
 
 ### Back-End
 - **Express**: Web framework for building RESTful APIs.
-- **Math.js**: Library for performing advanced mathematical operations.
+- **Axios**: Ensures reliable API calls with built-in support for request/response transformations.
 - **CORS**: Middleware for handling Cross-Origin Resource Sharing.
 
 
