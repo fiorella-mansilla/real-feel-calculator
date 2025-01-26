@@ -1,5 +1,3 @@
-// utils/validationUtils.js
-
 /**
  * Check if a value is a valid latitude.
  * @param {number} lat - Latitude to validate.
