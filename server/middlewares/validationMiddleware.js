@@ -1,4 +1,3 @@
-// middlewares/validationMiddleware.js
 import { isValidLatitude, isValidLongitude } from '../utils/validationUtils.js';
 
 /**
