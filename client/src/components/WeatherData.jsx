@@ -7,8 +7,8 @@ import CloudIcon from "@mui/icons-material/Cloud";
 import WbSunnyIcon from "@mui/icons-material/WbSunny";
 
 /**
- * WeatherData component displays weather information including temperature, 
- * relative humidity, cloud cover, and sunshine using Material-UI components.
+ * WeatherData displays weather information from the selected city such as temperature, 
+ * relative humidity, cloud cover, and sunshine time retrieved by the external API "Bright Sky".
  *
  * @component
  * @example
@@ -31,8 +31,18 @@ import WbSunnyIcon from "@mui/icons-material/WbSunny";
 const WeatherData = ({ weatherData }) => {
   const { temperature, relativeHumidity, cloudCover, sunshine } = weatherData;
 
+  // Reusable styles for the container
+  const styles = {
+    container: {
+      backgroundColor: "white",
+      padding: "1rem",
+      borderRadius: "8px",
+      boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+    },
+  };
+  
   return (
-    <div className="weather-data bg-white p-4 rounded shadow">
+    <div style={styles.container}>
       <List>
         {/* Temperature */}
         <ListItem>

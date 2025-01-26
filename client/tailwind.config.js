@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontSize: {
-        // Fluid typography with `clamp` function
+        // Responsive font sizes
         sm: "clamp(0.875rem, 1.5vw, 1rem)",  
         base: "clamp(1rem, 2vw, 1.125rem)",  
         lg: "clamp(1.125rem, 2.25vw, 1.375rem)", 
@@ -17,7 +17,7 @@ export default {
         "4xl": "clamp(2.5rem, 4vw, 3rem)", 
       },
       spacing: {
-        // Scalable padding and margin
+        // Fluid spacing for responsive design
         "fluid-1": "clamp(1rem, 2vw, 2rem)",
         "fluid-2": "clamp(1.5rem, 2.5vw, 2.5rem)",
       },

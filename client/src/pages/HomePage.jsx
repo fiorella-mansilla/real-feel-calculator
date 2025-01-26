@@ -1,59 +1,57 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "react-query";
-import axios from "axios";
+import { fetchRealFeel} from "../services/weatherService";
 import CitySelectorDropdown from "../components/CitySelectorDropdown";
 import WeatherData from "../components/WeatherData";
 import CircularProgress from "@mui/material/CircularProgress";
 import Logo from "../assets/home_logo.png";
 
-const fetchRealFeel = async ({ queryKey }) => {
-  const [, cityName, lat, lon] = queryKey;
-  if (!cityName || !lat || !lon) return null;
-
-  const response = await axios.get("http://localhost:3000/api/realfeel", {
-    params: { lat, lon },
-  });
-
-  return response.data;
-};
-
+/**
+ * HomePage Component for SPA application.
+ * Displays the real-feel temperature and weather information for selected cities.
+ *
+ * Features:
+ * - Dropdown for city selection in Germany.
+ * - Real-time data fetching with loading and error states.
+ * - Responsive design optimized for various screen sizes.
+ *
+ * @component
+ * @returns {JSX.Element} Rendered HomePage.
+ */
 const HomePage = () => {
-  const [selectedCity, setSelectedCity] = useState(null);
-  const [weatherData, setWeatherData] = useState(null);
-  const [showLoading, setShowLoading] = useState(false);
+  const [selectedCity, setSelectedCity] = useState(null); // Stores the selected city
+  const [showLoading, setShowLoading] = useState(false); // Controls the loading state visibility
 
+  // Fetch real feel data using rect-query
   const { data, isLoading, isError, error } = useQuery(
     ["realFeel", selectedCity?.name, selectedCity?.lat, selectedCity?.lon],
-    fetchRealFeel,
+    () => fetchRealFeel(selectedCity?.lat, selectedCity?.lon),
     {
-      enabled: !!selectedCity,
+      enabled: !!selectedCity, // Prevent fetching without a selected city
       refetchOnWindowFocus: false,
-      onSuccess: (fetchedData) => {
-        setWeatherData(fetchedData);
-      },
     }
   );
 
+  // Show or hide loading spinner based on isLoading state
   useEffect(() => {
     let timeout;
     if (isLoading) {
-      timeout = setTimeout(() => setShowLoading(true), 300);
+      timeout = setTimeout(() => setShowLoading(true), 300); // Delay loading spinner to prevent flickering
     } else {
       setShowLoading(false);
     }
-
     return () => clearTimeout(timeout);
   }, [isLoading]);
 
+  // Handle city selection from dropdown and reset weather data if no city is selected
   const handleCitySelect = (city) => {
     setSelectedCity(city);
-    if (!city) setWeatherData(null);
   };
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen bg-gray-100 p-fluid-1">
-      {/* Main Title with Logo */}
-      <div className="flex flex-col sm:flex-row items-center justify-center sm:space-x-4 space-y-4 sm:space-y-0 mb-8 lg:mt-2">
+      {/* Header Section with Logo */}
+      <header className="flex flex-col sm:flex-row items-center justify-center sm:space-x-4 space-y-4 sm:space-y-0 mb-8 lg:mt-2">
         <img
           src={Logo}
           alt="Logo"
@@ -62,21 +60,21 @@ const HomePage = () => {
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center sm:text-left">
           Real Feel Temperature Calculator
         </h1>
-      </div>
+      </header>
 
-      {/* Main Content */}
-      <div className="flex flex-col md:flex-row flex-1 w-full max-w-screen-xl bg-white rounded-lg shadow-md p-fluid-1 md:p-fluid-2">
-        {/* Left Column */}
-        <div className="flex flex-col flex-1 justify-start items-start md:pr-6 md:border-r md:border-gray-200">
+      {/* Main Content Section */}
+      <main className="flex flex-col md:flex-row flex-1 w-full max-w-screen-xl bg-white rounded-lg shadow-md p-fluid-1 md:p-fluid-2">
+        {/* Left Column - City Selector */}
+        <section className="flex flex-col flex-1 justify-start items-start md:pr-6 md:border-r md:border-gray-200">
           <h2 className="text-2xl font-normal mb-1">Welcome!</h2>
           <p className="text-base lg:text-lg text-gray-500 mb-6 mt-1 transition-all duration-400 ease-in-out">
             Select a city to view its real feel temperature and weather details.
           </p>
           <CitySelectorDropdown onCitySelect={handleCitySelect} className="shadow-md" />
-        </div>
+        </section>
 
-        {/* Right Column */}
-        <div className="flex flex-col flex-1 justify-start items-start md:pl-6 mt-12">
+        {/* Right Column - Weather Data */}
+        <section className="flex flex-col flex-1 justify-start items-start md:pl-6 mt-12">
           {showLoading ? (
             <div className="flex items-center space-x-4 ml-2">
               <p className="text-base lg:text-lg text-gray-600">
@@ -91,13 +89,13 @@ const HomePage = () => {
                   {error?.message || "Error fetching weather data. Please try again."}
                 </p>
               )}
-              {weatherData && weatherData.realFeel !== undefined && selectedCity && (
+              {data?.realFeel !== undefined && selectedCity && (
                 <div>
                   <h2 className="text-xl font-semibold mb-3">
                     Real Feel in {selectedCity.name}:{" "}
-                    {weatherData.realFeel.toFixed(1)}°C
+                    {data.realFeel.toFixed(1)}°C
                   </h2>
-                  <WeatherData weatherData={weatherData.weatherData} />
+                  <WeatherData weatherData={data.weatherData} />
                 </div>
               )}
               {!selectedCity && (
@@ -107,8 +105,8 @@ const HomePage = () => {
               )}
             </>
           )}
-        </div>
-      </div>
+        </section>
+      </main>
     </div>
   );
 };
