@@ -1,12 +1,13 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { 
   MenuItem, 
   Select, 
   InputLabel, 
   FormControl, 
-  useMediaQuery } from "@mui/material";
-import { cities } from "../data/cities"; 
+  useMediaQuery,
+ } from "@mui/material";
+import { fetchCities } from "../services/cityService";
 
 /**
  * CitySelectorDropdown allows users to select a city from which they want to get the real feel temperature
@@ -19,27 +20,59 @@ import { cities } from "../data/cities";
  */
 
 const CitySelectorDropdown = ({ onCitySelect }) => {
-  const [selectedCity, setSelectedCity] = useState(null); 
+  const [cities, setCities] = useState([]);
+  const [selectedCity, setSelectedCity] = useState(""); 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Detect screen size for responsive dropdown height
   const isSmallScreen = useMediaQuery("(max-width:600px)");
 
+  // Fetch cities on mount
+  useEffect(() => {
+    const loadCities = async () => {
+      setLoading(true);
+      try {
+        const cityList = await fetchCities();
+        setCities(cityList);
+        setError(null); // Clear error on successful fetch
+      } catch (err) {
+        setError("Network error: Failed to fetch cities.");
+        console.error("Error loading cities: ", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadCities();
+  }, []);
+
+    // Retry fetching cities when dropdown opens, if there was an error
+    const handleDropdownOpen = () => {
+      if (error) {
+        setLoading(true);
+        setCities([]); // Clear the current list while retrying
+        setError(null); // Clear the error message
+        fetchCities()
+          .then(cityList => {
+            setCities(cityList);
+          })
+          .catch(err => {
+            setError("Network error: Failed to fetch cities.");
+          })
+          .finally(() => setLoading(false));
+      }
+    };
+  
+
   // Handle city selection 
-  const handleCitySelect = useCallback(
-    (event) => {
+  const handleCitySelect = (event) => {
       const cityName = event.target.value;
       const city = cities.find((c) => c.name === cityName) || null; 
 
-      setSelectedCity(city);
+      setSelectedCity(cityName);
       onCitySelect(city);
-  }, 
-  [onCitySelect]);
-
-  // Memoized alphabetical sorting of cities to optimize performance
-  const sortedCities = useMemo(
-    () => [...cities].sort((a, b) => a.name.localeCompare(b.name)),
-    [cities]
-  );
+  };
 
   // Styles for dropdown and menu
   const styles = {
@@ -53,6 +86,11 @@ const CitySelectorDropdown = ({ onCitySelect }) => {
       overflowY: "auto",
       borderRadius: "8px",
     },
+    errorMessage: {
+      color: "red",
+      fontSize: "17px",
+      textAlign: "center",
+    }
   };
 
   return (
@@ -60,7 +98,7 @@ const CitySelectorDropdown = ({ onCitySelect }) => {
       <InputLabel id="city-select-label">Select a City</InputLabel>
       <Select
         labelId="city-select-label"
-        value={selectedCity?.name || ""}
+        value={selectedCity}
         onChange={handleCitySelect}
         label="Select a City"
         sx={styles.select}
@@ -69,6 +107,7 @@ const CitySelectorDropdown = ({ onCitySelect }) => {
             style: styles.menuPaper,
           },
         }}
+        onOpen={handleDropdownOpen}  // Trigger retry when dropdown opens
       >
         {/* Option to clear selection and previous rendered data */}
         <MenuItem value="">
@@ -76,25 +115,32 @@ const CitySelectorDropdown = ({ onCitySelect }) => {
         </MenuItem>
 
         {/* Render sorted cities */}
-        {sortedCities.map((city) => (
+        {cities.map((city) => (
           <MenuItem key={city.name} value={city.name}>
             {city.name}
           </MenuItem>
         ))}
       </Select>
+
+      {/* Show error message when server is not running */}
+      {error && (
+        <div style={styles.errorMessage}>
+          <p>{error}</p>
+        </div>
+      )}
+
+      {/* Show loading message instead of spinner */}
+      {loading && !error && (
+        <div style={styles.loadingMessage}>
+          <p>Loading cities...</p>
+        </div>
+      )}
     </FormControl>
   );
 };
 
 // Prop Types Validation
 CitySelectorDropdown.propTypes = {
-  cities: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      lat: PropTypes.number.isRequired,
-      lon: PropTypes.number.isRequired,
-    })
-  ).isRequired, // Ensure cities is a non-empty array of objects
   onCitySelect: PropTypes.func.isRequired, // Callback to notify parent of selection
 };
 
