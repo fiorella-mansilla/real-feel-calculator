@@ -2,6 +2,7 @@ import axios from 'axios';
 
 /**
  * Fetches current weather data for a given city in Germany using the Bright Sky API.
+ * Bright Sky Documentation: https://brightsky.dev/docs/#/operations/getCurrentWeather
  * This service retrieves weather parameters such as temperature, humidity, wind speed,
  * sunshine, and cloud cover, which are essential for further calculations like real feel temperature.
  * 

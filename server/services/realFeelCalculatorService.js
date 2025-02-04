@@ -22,7 +22,9 @@ export const calculateRealFeel = (timestamp, temperature, humidity, windSpeed, s
     // Convert wind speed from km/h to m/s (1 km/h = 0.27778 m/s)
     const windSpeedInMps = windSpeed / 3.6;
 
-    // Calculate heat index for hot temperatures (≥ 27°C)
+    /* Calculate heat index for hot temperatures (≥ 27°C)
+    * The Heat Index (HI) is calculated for high temperatures (typically above 27°C)
+    * and it also includes the humidity. */
     if (temperature >= 27) {
         realFeel = -42.379 + 
             2.04901523 * temperature + 
@@ -35,7 +37,11 @@ export const calculateRealFeel = (timestamp, temperature, humidity, windSpeed, s
             0.00000199 * Math.pow(temperature, 2) * Math.pow(humidity, 2);
     
     } 
-    // Calculate wind chill for cold temperatures (≤ 10°C)
+    /* Calculate wind chill for cold temperatures (≤ 10°C)
+    * The Wind Chill (WC) is used for low temperatures (typically below 10°C) and takes into account 
+    * the cooling effect of wind speed: important in the winter months in Germany, where cold winds can 
+    * make the air feel much colder than the actual temperature.
+    */
     else if (temperature <= 10) {
         if (windSpeedInMps < 1.4) {
             realFeel = temperature;  // Minimal wind chill effect at low wind speeds
