@@ -38,7 +38,7 @@ export const getWeatherData = async (lat, lon) => {
             temperature: weather.temperature,
             relativeHumidity: weather.relative_humidity,
             windSpeed: weather.wind_speed_60,
-            solarIrradiation: weather.solar_60,
+            solarIrradiation: weather.solar_60 ?? 0,
             cloudCover: weather.cloud_cover,
         };
 

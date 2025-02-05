@@ -23,7 +23,7 @@ export const calculateRealFeel = (timestamp, temperature, humidity, windSpeed, s
     const windSpeedInMps = windSpeed / 3.6;
 
     // Scale solarIrradiation effect based on season and cloud cover
-    let solarFactor = solarIrradiation * (1 - cloudCover / 100); // Reduce effect with more clouds
+    let solarFactor = (solarIrradiation ?? 0) * (1 - cloudCover / 100); // Reduce effect with more clouds
     if (season === 'summer') solarFactor *= 1.2; // Stronger sun effect in summer
     if (season === 'winter') solarFactor *= 0.8; // Weaker sun effect in winter
 
