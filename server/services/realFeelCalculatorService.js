@@ -3,17 +3,17 @@ import { getSeasonFromTimestamp } from '../utils/seasonUtils.js';
 /**
  * Calculate the real feel temperature based on current weather data.
  * The algorithm accounts for heat index (hot conditions), wind chill (cold conditions),
- * and intermediate adjustments for mild temperatures with seasonal influences.
+ * solar irradiation effects, humidity, wind cooling, and seasonal influences.
  * 
  * @param {string} timestamp - ISO timestamp of the retrieved weather data.
  * @param {number} temperature - Current air temperature in degrees Celsius at timestamp.
  * @param {number} humidity - Relative humidity as a percentage (0-100) at timestamp.
  * @param {number} windSpeed - Wind speed in km/h during previous 60 minutes.
- * @param {number} sunshine - Sunshine duration during previous 60 minutes.
+ * @param {number} solarIrradiation - Solar irradiation in Wh/m² over the past 60 minutes.
  * @param {number} cloudCover - Cloud cover as a percentage (0-100) at timestamp.
  * @returns {number} - Real feel temperature rounded to one decimal place.
  */
-export const calculateRealFeel = (timestamp, temperature, humidity, windSpeed, sunshine, cloudCover) => {
+export const calculateRealFeel = (timestamp, temperature, humidity, windSpeed, solarIrradiation, cloudCover) => {
     // Determine the current season (e.g., 'winter', 'summer') from the provided timestamp
     const season = getSeasonFromTimestamp(timestamp); 
 
@@ -21,6 +21,11 @@ export const calculateRealFeel = (timestamp, temperature, humidity, windSpeed, s
 
     // Convert wind speed from km/h to m/s (1 km/h = 0.27778 m/s)
     const windSpeedInMps = windSpeed / 3.6;
+
+    // Scale solarIrradiation effect based on season and cloud cover
+    let solarFactor = solarIrradiation * (1 - cloudCover / 100); // Reduce effect with more clouds
+    if (season === 'summer') solarFactor *= 1.2; // Stronger sun effect in summer
+    if (season === 'winter') solarFactor *= 0.8; // Weaker sun effect in winter
 
     /* Calculate heat index for hot temperatures (≥ 27°C)
     * The Heat Index (HI) is calculated for high temperatures (typically above 27°C)
@@ -56,14 +61,14 @@ export const calculateRealFeel = (timestamp, temperature, humidity, windSpeed, s
     else {
         realFeel = temperature + 
         (humidity / 100) * (5 - cloudCover / 20) +   // Humidity and cloud cover effects
-        (sunshine / 60) -                            // Sunshine contribution
+        (solarFactor / 25) -                         // Solar irradiation contribution
         (windSpeedInMps / 2);                        // Wind cooling effect
         
         // Seasonal adjustments
         if (season === 'winter' && temperature < 15) {
             realFeel -= (windSpeedInMps / 5);  // Amplify wind effect in winter
         } else if (season === 'summer' && temperature >= 15) {
-            realFeel += (sunshine / 60) * 0.2;  // Enhance sunshine effect in summer
+            realFeel += (solarFactor / 50);  // Enhance solar effect in summer
         }
     }
 

@@ -8,7 +8,7 @@ import WbSunnyIcon from "@mui/icons-material/WbSunny";
 
 /**
  * WeatherData displays weather information from the selected city such as temperature, 
- * relative humidity, cloud cover, and sunshine time retrieved by the external API "Bright Sky".
+ * relative humidity, cloud cover, and solar irradiation retrieved by the external API "Bright Sky".
  *
  * @component
  * @example
@@ -16,7 +16,7 @@ import WbSunnyIcon from "@mui/icons-material/WbSunny";
  *   temperature: 25,
  *   relativeHumidity: 60,
  *   cloudCover: 20,
- *   sunshine: 80
+ *   solarIrradiation: 0.207
  * };
  * return <WeatherData weatherData={weatherData} />;
  *
@@ -25,11 +25,11 @@ import WbSunnyIcon from "@mui/icons-material/WbSunny";
  * @param {number} props.weatherData.temperature - Temperature in degrees Celsius
  * @param {number} props.weatherData.relativeHumidity - Relative humidity percentage
  * @param {number} props.weatherData.cloudCover - Cloud cover percentage
- * @param {number} props.weatherData.sunshine - Sunshine percentage
+ * @param {number} props.weatherData.solarIrradiation - Solar irradiation in Wh/m²
  */
 
 const WeatherData = ({ weatherData }) => {
-  const { temperature, relativeHumidity, cloudCover, sunshine } = weatherData;
+  const { temperature, relativeHumidity, cloudCover, solarIrradiation } = weatherData;
 
   // Reusable styles for the container
   const styles = {
@@ -71,12 +71,12 @@ const WeatherData = ({ weatherData }) => {
         </ListItem>
         <Divider />
 
-        {/* Sunshine */}
+        {/* Solar Irradiation */}
         <ListItem>
           <ListItemIcon>
             <WbSunnyIcon color="primary" />
           </ListItemIcon>
-          <ListItemText primary="Sunshine" secondary={`${sunshine}s`} />
+          <ListItemText primary="Solar Irradiation" secondary={`${solarIrradiation} Wh/m²`} />
         </ListItem>
       </List>
     </div>
@@ -88,7 +88,7 @@ WeatherData.propTypes = {
     temperature: PropTypes.number.isRequired,
     relativeHumidity: PropTypes.number.isRequired,
     cloudCover: PropTypes.number.isRequired,
-    sunshine: PropTypes.number.isRequired,
+    solarIrradiation: PropTypes.number.isRequired,
   }).isRequired,
 };
 
