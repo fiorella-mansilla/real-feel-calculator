@@ -1,6 +1,6 @@
 # Real Feel Temperature Calculator
 
-This is a MERN application that calculates the real feel temperature for any city in Germany. It uses an algorithm that combines various weather constants for heat index and wind chill formulas, with minor adjustments for local conditions.
+This is a MERN application that calculates the real feel temperature for any city in Germany. It executes an algorithm that combines various weather constants for heat index and wind chill formulas, with minor adjustments for local conditions.
 
 
 ## Table of Contents
@@ -21,7 +21,7 @@ This project includes :
 
 2. **Server**: A Node.js back-end using Express for handling API requests.
 
-3. **Database**: A MongoDB Atlas database used to store a list of cities with their respective coordinates for retrieval.
+3. **Database**: A MongoDB database used to store a list of cities with their respective coordinates for retrieval.
 
 4. **External API "Bright Sky"**: An external JSON API used to retrieve the necessary weather data in order to perform the calculation.
 
@@ -39,7 +39,7 @@ This project includes :
 - **Axios**: Ensures reliable API calls with built-in support for request/response transformations.
 - **CORS**: Middleware for handling Cross-Origin Resource Sharing.
 - **Mongoose**: ODM for MongoDB, providing schema-based solutions to model data.
-- **dotenv**: Loads environment variables from a .env file.
+- **dotenv**: Loads environment variables from a `.env` file.
 - **MongoDB Atlas**: Cloud database service for storing city data.
 
 ## Getting Started
@@ -76,13 +76,13 @@ Ensure the following software is installed on your system:
 
 ### Environment Variables
 
-To configure MongoDB Atlas, create a `.env` file in the server directory and add the following:
+To configure MongoDB Atlas, create a `.env` file in the `server` directory and add the following:
 
 ```bash
 MONGO_URI=your_mongodb_atlas_connection_string
 ```
 
-Replace `your_mongodb_atlas_connection_string` with the actual connection string from MongoDB Atlas.
+Replace `your_mongodb_atlas_connection_string` with the actual connection string provided on the first slide of the PPTX Phase 2 presentation file.
 
 ## Development Workflow
 
@@ -95,7 +95,7 @@ Replace `your_mongodb_atlas_connection_string` with the actual connection string
    npm run dev
    ```
 
-2. Access the front-end at http://localhost:5173 (default Vite port).
+2. Access the front-end at http://localhost:5173 
 
 #### Back-End Development
 

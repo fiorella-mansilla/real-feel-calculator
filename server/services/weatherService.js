@@ -2,8 +2,9 @@ import axios from 'axios';
 
 /**
  * Fetches current weather data for a given city in Germany using the Bright Sky API.
+ * Bright Sky Documentation: https://brightsky.dev/docs/#/operations/getCurrentWeather
  * This service retrieves weather parameters such as temperature, humidity, wind speed,
- * sunshine, and cloud cover, which are essential for further calculations like real feel temperature.
+ * solar irradiation, and cloud cover, which are essential for further calculations like real feel temperature.
  * 
  * @param {number} lat - Latitude of the location in decimal degrees.
  * @param {number} lon - Longitude of the location in decimal degrees.
@@ -12,7 +13,7 @@ import axios from 'axios';
  *  - temperature: Current air temperature in degrees Celsius at timestamp.
  *  - relativeHumidity: Relative humidity as a percentage (0-100) at timestamp.
  *  - windSpeed: Wind speed averaged over the past 60 minutes (in km/h).
- *  - sunshine: Sunshine duration during previous 60 minutes.
+ *  - solarIrradiation: Solar irradiation in Wh/m² over the past 60 minutes.
  *  - cloudCover: Cloud cover as a percentage (0-100) at timestamp.
  * @throws {Error} - Throws an error if the API request fails or the response is invalid.
  */
@@ -37,7 +38,7 @@ export const getWeatherData = async (lat, lon) => {
             temperature: weather.temperature,
             relativeHumidity: weather.relative_humidity,
             windSpeed: weather.wind_speed_60,
-            sunshine: weather.sunshine_60,
+            solarIrradiation: weather.solar_60 ?? 0,
             cloudCover: weather.cloud_cover,
         };
 

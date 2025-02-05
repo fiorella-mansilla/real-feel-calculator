@@ -29,7 +29,7 @@ export const getRealFeelTemperature = async (req, res, next) => {
             weatherData.temperature,
             weatherData.relativeHumidity,
             weatherData.windSpeed,
-            weatherData.sunshine,
+            weatherData.solarIrradiation,
             weatherData.cloudCover
         );
 

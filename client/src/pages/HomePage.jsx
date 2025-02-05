@@ -53,7 +53,7 @@ const HomePage = () => {
       {/* Header Section with Logo */}
       <header className="flex flex-col sm:flex-row items-center justify-center sm:space-x-4 space-y-4 sm:space-y-0 mb-8 lg:mt-2">
         <img
-          src={Logo}
+          src={Logo} // Credit : Icon by Grafixpoint from https://www.freepik.com
           alt="Logo"
           className="h-9 w-9 sm:h-11 sm:w-11 lg:h-16 lg:w-16 object-contain"
         />
